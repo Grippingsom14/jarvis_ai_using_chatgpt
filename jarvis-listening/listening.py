@@ -1,7 +1,6 @@
 import os
 import sys
 sys.path.append("chatgpt-chat")
-import dotenv
 from dotenv import load_dotenv
 import pyaudio
 import wave
@@ -10,8 +9,6 @@ import time
 import random
 import string
 from openai import OpenAI
-from chat import chat
-import pyttsx3
 import whisper
 client = OpenAI()
 load_dotenv()
@@ -21,16 +18,7 @@ TEMP_LOCATION = os.getenv('TEMP_AUDIO_FILE_LOCATION')
 
 
 def whisper_transcribe(_path, random_string):
-    # openai whisper calling
-    # audio_file = open(_path, "rb")
-    # transcript = client.audio.transcriptions.create(
-    #     model="whisper-1",
-    #     file=audio_file,
-    #     response_format="text"
-    # )
-    # audio_file.close()
-
-    model = whisper.load_model("base")
+    model = whisper.load_model("base.en")
     result = model.transcribe(_path, fp16=False)
     return result["text"]
 
@@ -54,18 +42,6 @@ def jarvis_listening():
     refresh_rate = 128000
     chunks = 1024
     threshold_volume = 5000  # Adjust this threshold based on your environment
-    engine = pyttsx3.init('sapi5')
-
-    # Set Rate
-    engine.setProperty('rate', 160)
-
-    # Set Volume
-    engine.setProperty('volume', 1.0)
-
-    # Set Voice (Female)
-    voices = engine.getProperty('voices')
-
-    engine.setProperty('voice', voices[1].id)
     # Initialize PyAudio
     audio = pyaudio.PyAudio()
 
@@ -106,7 +82,7 @@ def jarvis_listening():
                     elapsed_time = time.time() - start_time_recorded
                     secs = float("{:.2f}".format(elapsed_time % 60))
                     print("Elapsed time: ", secs)
-                    if secs > 1.5:
+                    if secs > 1:
                         # Stop recording and save the audio file
                         audio.close(stream)
                         stream.stop_stream()
@@ -124,17 +100,9 @@ def jarvis_listening():
                         print("Stop recording")
                         print(f"Recording saved as : recorded_audio_{random_string}.wav")
                         transcribed = whisper_transcribe(f"{TEMP_LOCATION}recorded_audio_{random_string}.wav", random_string)
-                        reply = chat(transcribed)
-                        print('REPLY:', reply.replace('Friday: ', ''))
-                        engine.say(reply)
-                        engine.runAndWait()
-
                         os.remove(f"{TEMP_LOCATION}recorded_audio_{random_string}.wav")
                         break
 
+    return transcribed
     # Restart the listening process after a delay
-    jarvis_listening()
-
-
-# Start the initial execution of the jarvis_listening function
-jarvis_listening()
+    # jarvis_listening()

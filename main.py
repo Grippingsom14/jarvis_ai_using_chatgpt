@@ -1,57 +1,33 @@
 import os
-import pyttsx3
 from flask import Flask, redirect, url_for, request
-from openai import OpenAI
+import sys
+sys.path.append("chatgpt-chat")
+sys.path.append("friday-talking")
+sys.path.append("jarvis-listening")
 from dotenv import load_dotenv
+from chat import chat
+from talking import talk
+from listening import jarvis_listening
 load_dotenv()
 
-openai_api_key = os.getenv('OPENAI_API_KEY')
-client = OpenAI()
 app = Flask(__name__)
 
 
+while True:
+    try:
+        audio_file = jarvis_listening()
+        bot_reply = chat(audio_file)
+        talk(bot_reply)
+        # os.remove(audio_file["path"])
+    except Exception as e:
+        print("Exception occurred: ", e)
+        break
+
+
 @app.route('/success/<name>')
-def success(name):
-    return 'welcome %s' % name
+def do_chat(name):
+    reply = chat(name)
 
-
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        user = request.form['nm']
-        return redirect(url_for('success', name=user))
-    else:
-        user = request.args.get('nm')
-        return redirect(url_for('success', name=user))
-
-def jarvis_talks():
-    print('TEST')
-    # USERNAME = "Sir"
-    # BOTNAME = "JARVIS"
-    #
-    engine = pyttsx3.init('sapi5')
-
-    # Set Rate
-    engine.setProperty('rate', 175)
-
-    # Set Volume
-    engine.setProperty('volume', 1.0)
-
-    # Set Voice (Female)
-    voices = engine.getProperty('voices')
-    print(voices)
-
-    engine.setProperty('voice', voices[1].id)
-    engine.say("Sir! There is an emergency in the OT")
-    engine.runAndWait()
-
-    # response = client.audio.speech.create(
-    #     model="tts-1",
-    #     voice="nova",
-    #     input="Sir! There is an emergency in the OT",
-    # )
-    # print(response)
-    # response.stream_to_file("output.mp3")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
