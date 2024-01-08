@@ -1,0 +1,14 @@
+flask==*  # Flask web framework
+speechrecognition==*  # Library for performing speech recognition
+python-dotenv==*  # Python-dotenv for managing environment variables
+sounddevice==*  # For playing and recording sound
+pydub==*  # Manipulate audio with a simple and easy high-level interface
+pyaudio==*  # Provides Python bindings for PortAudio, used for audio I/O
+keyboard==*  # Library for simulating keyboard input
+numpy==*  # Fundamental package for scientific computing with Python
+python-decouple==*  # Helps to separate the settings from the code
+pyttsx3==*  # Text-to-speech conversion library
+langchain-openai==*  # OpenAI's Language chain package
+langchain==*  # Language chain package
+openai==*  # OpenAI API library
+openai-whisper==*  # Library you've mentioned (if it exists)

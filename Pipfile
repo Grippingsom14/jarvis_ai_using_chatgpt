@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+speechrecognition = "*"
+python-dotenv = "*"
+sounddevice = "*"
+pydub = "*"
+pyaudio = "*"
+keyboard = "*"
+numpy = "*"
+python-decouple = "*"
+pyttsx3 = "*"
+langchain-openai = "*"
+langchain = "*"
+openai = "*"
+openai-whisper = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

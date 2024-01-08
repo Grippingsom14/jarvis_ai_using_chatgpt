@@ -1,0 +1,10 @@
+Jarvis AI:
+
+1. It can listen to your commands all the time.
+2. It will respond on your command to an AI voice.
+3. It can track your health information and suggest you what to do for your exercise or what food you should take.
+4. It can execute small computer commands from your voice, like "Open Chrome and search for Dogs images".
+5. It can check your daily schedule and give you reminder and also can set up your task/reminders.
+6. It can track weather like real-time data.
+7. it can suggest your dressing for a particular event.
+8. Lock-Unlock Jarvis.
