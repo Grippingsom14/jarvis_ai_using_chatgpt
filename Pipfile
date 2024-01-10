@@ -18,6 +18,14 @@ langchain-openai = "*"
 langchain = "*"
 openai = "*"
 openai-whisper = "*"
+openmeteo-requests = "*"
+requests-cache = "*"
+retry-requests = "*"
+pandas = "*"
+numexpr = "*"
+langchain-community = "*"
+langchainhub = "*"
+opencv-python = "*"
 
 [dev-packages]
 
