@@ -1,7 +1,7 @@
 import sys
 sys.path.append("chatgpt-chat")
-from chat import chat
+# from chat import chat
 
 
 def exec_process(process, application):
-    return
+    return "executed " + application + " " + process

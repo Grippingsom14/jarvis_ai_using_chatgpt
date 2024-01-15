@@ -26,6 +26,7 @@ numexpr = "*"
 langchain-community = "*"
 langchainhub = "*"
 opencv-python = "*"
+llama-index = "*"
 
 [dev-packages]
 

@@ -1,5 +1,6 @@
 import os
 import sys
+
 sys.path.append("misc")
 from langchain import hub
 from langchain.chains import LLMMathChain
@@ -9,48 +10,123 @@ from langchain.agents import Tool
 from langchain.agents import AgentType, AgentExecutor, create_openai_functions_agent
 from langchain_openai import ChatOpenAI
 from realtime_data_apis import get_realtime_data
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationChain
+from langchain.prompts.prompt import PromptTemplate
+from langchain.agents.schema import AgentScratchPadChatPromptTemplate
+from langchain.prompts import ChatPromptTemplate
+from initiate import training_prompt
 from dotenv import load_dotenv
+
 load_dotenv()
 import requests
-
 
 # os.environ['OPENAI_API_KEY'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
 # os.environ['SERPAPI_API_KEY'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
 # llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
 llm = ChatOpenAI(temperature=1, model="gpt-4-1106-preview", openai_api_key=os.getenv('OPENAI_API_KEY'))
+llm_math_chain = LLMMathChain.from_llm(llm=llm, verbose=True)
+# llm_chat = ConversationChain(llm=llm, verbose=True)
+memory = ConversationBufferMemory(memory_key="history", return_messages=True, max_token_limit=50)
 
 
+data_memory = ''
 def get_weather(self):
     return get_realtime_data('weather', "")
+
 
 def get_news(self):
     return get_realtime_data('news', "")
 
 
-llm_math_chain = LLMMathChain.from_llm(llm=llm, verbose=True)
+def get_date(self):
+    # global data_memory
+    # print("data_memory", data_memory)
+    # if data_memory == '':
+    #     data_memory = "loaded"
+    #     return get_realtime_data('date')
+    # else:
+    #     return
+
+    return get_realtime_data('date')
+
 
 tools = [
     Tool(
         name="Weather",
         func=get_weather,
-        description="useful for when you need to answer weather report. You should ask targeted questions"
+        description="useful for when you need to answer weather report, sunrise or sunset time, windspeed, weather forcast or any other weather forcast related information."
     ),
     Tool(
         name="Calculator",
-        func=llm_math_chain.invoke,
+        func=llm_math_chain.run,
         description="useful for when you need to answer questions about math"
     ),
     Tool(
         name="News",
         func=get_news,
         description="useful for when you need to answer about latest news headlines."
-    )
+    ),
+    Tool(
+        name="Date",
+        func=get_date,
+        description="useful for getting the today's date for user query or any other execution"
+    ),
+    # Tool(
+    #     name="Conversation",
+    #     func=llm_chat.run,
+    #     description="For natural conversation this tool is needed"
+    # )
 ]
-prompt = hub.pull("hwchase17/openai-functions-agent")
 
-agent = create_openai_functions_agent(llm, tools, prompt)
-openai_agent = AgentExecutor(tools=tools, agent=agent, verbose=True)
+# template_model = """
+#     {agent_scratchpad}
+#     {history}
+#     {input}"""
+# prompt = PromptTemplate(input_variables=["history", "input", "agent_scratchpad"], template=template_model)
 
-result = openai_agent.invoke({"input": "What are the news headlines for today?"})
+memory.load_memory_variables({})
+template_model = """
+{agent_scratchpad}
 
-print(result['output'])
+Current conversation with Rupam and you:
+{history}
+
+Rupam: {input}
+Friday: """
+# print(prompt)
+
+template = ChatPromptTemplate.from_messages([
+    ("system", f"{training_prompt}" + "This is the history of the chat {history}"),
+    ("human", "{user_input} {input}"),
+])
+
+messages = template.format_messages(
+    user_input="Hey Friday!"
+)
+print("MESSAGES : ", messages)
+prompt_new = AgentScratchPadChatPromptTemplate(input_variables=["history", "input"], messages=messages)
+
+agent = create_openai_functions_agent(llm, tools, prompt_new)
+openai_agent = AgentExecutor(
+    tools=tools,
+    agent=agent,
+    verbose=True,
+    memory=memory,
+    early_stopping="force",
+    # max_execution_time=1
+)
+
+
+def agent_chat(message):
+    while True:
+        memory.clear()
+        # result = openai_agent.invoke({"input": message})
+        # result = openai_agent.invoke({"input": input("Ask : ")})
+        result = openai_agent.invoke({"input": input("Ask : ")})
+        print(result['output'])
+        # return result['output']
+
+# https://python.langchain.com/docs/modules/agents/how_to/custom_agent
+# https://api.python.langchain.com/en/latest/agents/langchain.agents.schema.AgentScratchPadChatPromptTemplate.html#
+# agent_chat("")

@@ -17,17 +17,20 @@ llm = OpenAI(openai_api_key=os.getenv('OPENAI_API_KEY'))
 memory = ConversationBufferMemory(memory_key="history", return_messages=True, max_token_limit=50)
 # memory.load_memory_variables({})
 
+def getstr(self):
+    return "i am good"
+
 def chat(message):
     try:
         memory.load_memory_variables({})
-        # template_model = f"{training_prompt}" + """
-        # Current conversation with Rupam and you:
-        # {history}
-        #
-        # Rupam: {input}
-        # Friday: """
+        template_model = f"{training_prompt}" + """
+        Current conversation with Rupam and you:
+        {history}
 
-        template_model = "{history}{input}"
+        Rupam: {input}
+        Friday: """
+
+        # template_model = "{history}{input}"
 
 
         chat_prompt = PromptTemplate(input_variables=["history", "input"], template=template_model)
@@ -41,8 +44,9 @@ def chat(message):
         reply = conversation.predict(input=f"{message}")
         print("Friday: ", reply)
         return reply
+
     except Exception as err:
         print('Exception: ', err)
 
 
-chat(input("ask : "))
+# chat(input("ask : "))

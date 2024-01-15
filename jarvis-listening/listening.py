@@ -41,7 +41,7 @@ def jarvis_listening():
     channels = 1
     refresh_rate = 128000
     chunks = 1024
-    threshold_volume = 5000  # Adjust this threshold based on your environment
+    threshold_volume = 3000  # Adjust this threshold based on your environment
     # Initialize PyAudio
     audio = pyaudio.PyAudio()
 

@@ -1,22 +1,38 @@
 import os
+import sys
 import datetime
+import time
+import json
 import requests
 from dotenv import load_dotenv
 load_dotenv()
+cached_weather_data = ''
+cached_news_data = ''
 
 
 def get_realtime_data(data_category, query=""):
-    if data_category == 'time':
-        return datetime.time
-
-    elif data_category == 'date':
-        return datetime.date
+    if data_category == 'datetime':
+        # datetime_json = json.loads(datetime.datetime.now().strftime("{\"date\": \"%Y-%m-%d\", \"time\": \"%H:%M\"}"))
+        # return datetime_json
+        return datetime.datetime.now()
 
     elif data_category == 'news':
+        def extract_source_and_title(data):
+            # Load JSON data from string
+            articles_data = data
+
+            # Extract the relevant information
+            extracted_data = [
+                {"source": article["source"]["name"], "title": article["title"]}
+                for article in articles_data["articles"]
+            ]
+
+            return extracted_data
+
         api_url = (f"https://newsapi.org/v2/top-headlines?country=in&pageSize=3&page=1&apiKey={os.getenv('NEWSAPI_APIKEY')}")
         response = requests.get(f"{api_url}")
         if response.status_code == 200:
-            return response.json()
+            return extract_source_and_title(response.json())
         else:
             return "weather data is not available right now"
 
