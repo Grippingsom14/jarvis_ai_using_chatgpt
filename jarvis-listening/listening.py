@@ -14,7 +14,7 @@ client = OpenAI()
 load_dotenv()
 
 TEMP_LOCATION = os.getenv('TEMP_AUDIO_FILE_LOCATION')
-# openai.api_key = os.getenv('OPENAI_API_KEY')
+# openai.api_key = os.getenv('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')
 
 
 def whisper_transcribe(_path, random_string):
