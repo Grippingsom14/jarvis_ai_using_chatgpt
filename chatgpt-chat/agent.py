@@ -15,11 +15,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# os.environ['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'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
-# os.environ['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'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
+# os.environ['API key'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
+# os.environ['Api Key'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
 # llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
 llm = ChatOpenAI(temperature=1, model="gpt-4-1106-preview",
-                 openai_api_key=os.getenv('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'))
+                 openai_api_key=os.getenv('API Key'))
 llm_math_chain = LLMMathChain.from_llm(llm=llm, verbose=True)
 # llm_chat = ConversationChain(llm=llm, verbose=True)
 memory = ConversationBufferMemory(memory_key="history", return_messages=True, max_token_limit=50)
