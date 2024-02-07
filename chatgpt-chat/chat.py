@@ -12,8 +12,8 @@ from initiate import training_prompt
 load_dotenv()
 
 lang_model = os.getenv('OPENAI_LANGUAGE_MODEL')
-# llm = OpenAI(openai_api_key=os.getenv('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'), model_name="gpt-4-1106-preview")
-llm = OpenAI(openai_api_key=os.getenv('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'))
+# llm = OpenAI(openai_api_key=os.getenv('API key'), model_name="gpt-4-1106-preview")
+llm = OpenAI(openai_api_key=os.getenv('API key'))
 memory = ConversationBufferMemory(memory_key="history", return_messages=True, max_token_limit=50)
 # memory.load_memory_variables({})
 
