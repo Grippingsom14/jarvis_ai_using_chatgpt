@@ -1,11 +1,14 @@
 import os
 from flask import Flask, redirect, url_for, request
 import sys
+
+from flask import Flask
+
 sys.path.append("chatgpt-chat")
 sys.path.append("friday-talking")
 sys.path.append("jarvis-listening")
 from dotenv import load_dotenv
-from AIChat import chat
+from aichat import chat
 from talking import talk
 from listening import jarvis_listening
 from agentpy import chat_with_agent

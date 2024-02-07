@@ -2,35 +2,31 @@ import os
 import sys
 
 sys.path.append("misc")
-from langchain import hub
 from langchain.chains import LLMMathChain
-from langchain_openai import OpenAI
-from langchain.agents.initialize import initialize_agent
 from langchain.agents import Tool
-from langchain.agents import AgentType, AgentExecutor, create_openai_functions_agent
+from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain_openai import ChatOpenAI
 from realtime_data_apis import get_realtime_data
 from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationChain
-from langchain.prompts.prompt import PromptTemplate
 from langchain.agents.schema import AgentScratchPadChatPromptTemplate
 from langchain.prompts import ChatPromptTemplate
 from initiate import training_prompt
 from dotenv import load_dotenv
 
 load_dotenv()
-import requests
 
 # os.environ['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'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
 # os.environ['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'] = str("xxxxxxxxxxxxxxxxxxxxxxxx")
 # llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
-llm = ChatOpenAI(temperature=1, model="gpt-4-1106-preview", openai_api_key=os.getenv('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'))
+llm = ChatOpenAI(temperature=1, model="gpt-4-1106-preview",
+                 openai_api_key=os.getenv('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'))
 llm_math_chain = LLMMathChain.from_llm(llm=llm, verbose=True)
 # llm_chat = ConversationChain(llm=llm, verbose=True)
 memory = ConversationBufferMemory(memory_key="history", return_messages=True, max_token_limit=50)
 
-
 data_memory = ''
+
+
 def get_weather(self):
     return get_realtime_data('weather', "")
 
